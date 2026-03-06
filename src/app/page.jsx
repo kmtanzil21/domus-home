@@ -1,3 +1,4 @@
+import CTABanner from "@/components/CTABanner";
 import FeaturedHouses from "@/components/FeaturedHouses";
 import HowItWorks from "@/components/HowItWorks";
 import LuxuryHomeSlider from "@/components/LuxuryHomeSlider";
@@ -11,6 +12,7 @@ export default function Home() {
       <FeaturedHouses></FeaturedHouses>
       <HowItWorks></HowItWorks>
       <Testimonials></Testimonials>
+      <CTABanner></CTABanner>
      
     </div>
   );
