@@ -1,38 +1,119 @@
+"use client";
+
 import Link from 'next/link';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Logo from './Logo';
 
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/houses', label: 'All Houses' },
+  { href: '/dashboard', label: 'Dashboard' },
+];
+
 const Navbar = () => {
-  const links=<>
-  <li><Link href="/">Home</Link></li>
-      
-  <li><Link href="/houses">All Houses</Link></li>
-  </>
-    return (
-        <div className="navbar bg-base-100 shadow-sm">
-  <div className="navbar-start">
-    <div className="dropdown">
-      <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <nav className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      scrolled
+        ? 'bg-white/95 backdrop-blur-md shadow-md'
+        : 'bg-white shadow-sm'
+    } border-b border-primary/10`}>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[70px] flex items-center justify-between">
+
+        {/* Logo */}
+        <Link href="/" className="flex items-center shrink-0">
+          <Logo />
+        </Link>
+
+        {/* Desktop Nav Links */}
+        <ul className="hidden lg:flex items-center gap-8">
+          {links.map((link, i) => (
+            <React.Fragment key={link.href}>
+              {i > 0 && (
+                <span className="w-1 h-1 rounded-full bg-primary opacity-40" />
+              )}
+              <li>
+                <Link
+                  href={link.href}
+                  className="relative text-xs font-semibold uppercase tracking-widest text-secondary
+                             after:absolute after:bottom-[-3px] after:left-0 after:h-[2px] after:w-0
+                             after:bg-primary after:transition-all after:duration-300
+                             hover:text-primary hover:after:w-full transition-colors duration-200"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            </React.Fragment>
+          ))}
+        </ul>
+
+        {/* Right Side */}
+        <div className="flex items-center gap-3">
+          {/* Login Button */}
+          <Link
+            href="/login"
+            className="text-xs font-semibold uppercase tracking-widest text-primary
+                       border border-primary px-5 py-2 rounded-sm
+                       hover:bg-primary hover:text-white transition-all duration-300"
+          >
+            Login
+          </Link>
+
+          {/* Hamburger — Mobile Only */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="lg:hidden flex flex-col justify-center gap-[5px] p-1 group"
+            aria-label="Toggle menu"
+          >
+            <span className={`block w-[22px] h-[2px] bg-secondary rounded transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+            <span className={`block w-[22px] h-[2px] bg-secondary rounded transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-[22px] h-[2px] bg-secondary rounded transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+          </button>
+        </div>
       </div>
-      <ul
-        tabIndex="-1"
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        {links}
-      </ul>
-    </div>
-   <Link href={"/"}><Logo></Logo></Link>
-  </div>
-  <div className="navbar-center hidden lg:flex">
-    <ul className="menu menu-horizontal px-1">
-      {links}
-    </ul>
-  </div>
-  <div className="navbar-end">
-    <a className="btn btn-primary btn-outline">Login</a>
-  </div>
-</div>
-    );
+
+      {/* Mobile Dropdown */}
+      <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        menuOpen ? 'max-h-64 border-t-2 border-primary' : 'max-h-0'
+      } bg-white`}>
+        <ul className="flex flex-col px-6 py-4 gap-4">
+          {links.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest
+                           text-secondary hover:text-primary transition-colors duration-200"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-primary opacity-60" />
+                {link.label}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="block text-center text-xs font-semibold uppercase tracking-widest
+                         text-primary border border-primary px-5 py-2 rounded-sm mt-1
+                         hover:bg-primary hover:text-white transition-all duration-300"
+            >
+              Login
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;
