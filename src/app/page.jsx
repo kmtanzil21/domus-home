@@ -1,6 +1,7 @@
 import FeaturedHouses from "@/components/FeaturedHouses";
 import HowItWorks from "@/components/HowItWorks";
 import LuxuryHomeSlider from "@/components/LuxuryHomeSlider";
+import Testimonials from "@/components/Testimonials";
 import Image from "next/image";
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
       <LuxuryHomeSlider></LuxuryHomeSlider>
       <FeaturedHouses></FeaturedHouses>
       <HowItWorks></HowItWorks>
+      <Testimonials></Testimonials>
      
     </div>
   );

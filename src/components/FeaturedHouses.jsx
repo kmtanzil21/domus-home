@@ -5,7 +5,7 @@ const houses = [
   {
     id: 1,
     title: 'Skyline Penthouse',
-    location: 'Manhattan, NY',
+    location: 'Gazipur, Dhaka',
     price: '$4,200/mo',
     beds: 3,
     baths: 2,
@@ -16,7 +16,7 @@ const houses = [
   {
     id: 2,
     title: 'Ocean Breeze Villa',
-    location: 'Malibu, CA',
+    location: "Saint Martin's Island, Cox's Bazar",
     price: '$6,800/mo',
     beds: 4,
     baths: 3,
@@ -27,7 +27,7 @@ const houses = [
   {
     id: 3,
     title: 'Garden Retreat',
-    location: 'Austin, TX',
+    location: 'Chattogram, Bangladesh',
     price: '$2,900/mo',
     beds: 2,
     baths: 2,
@@ -38,7 +38,7 @@ const houses = [
   {
     id: 4,
     title: 'Downtown Loft',
-    location: 'Chicago, IL',
+    location: 'Pabna, Rajshahi',
     price: '$3,500/mo',
     beds: 2,
     baths: 1,
