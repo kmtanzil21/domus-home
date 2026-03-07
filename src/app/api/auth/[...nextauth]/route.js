@@ -10,7 +10,7 @@ export const authOptions = {
 
     // Google Provider
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientId:     process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
 
@@ -18,7 +18,7 @@ export const authOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email:    { label: 'Email',    type: 'email' },
+        email:    { label: 'Email',    type: 'email'    },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
@@ -26,7 +26,7 @@ export const authOptions = {
           throw new Error('Email and password are required');
         }
 
-        const collection = dbConnect('users');
+        const collection = await dbConnect('users');
         const user = await collection.findOne({ email: credentials.email });
 
         if (!user) {
@@ -46,24 +46,28 @@ export const authOptions = {
           id:    user._id.toString(),
           name:  user.name,
           email: user.email,
-          role:  user.role,
+          image: user.image || null,
+          role:  user.role  || 'user',
         };
       },
     }),
   ],
 
   callbacks: {
-    // Add role and id to the JWT token
-    async jwt({ token, user, account, profile }) {
+
+    async jwt({ token, user, account, trigger, session }) {
+
+      // 1. On first login — attach user data to token
       if (user) {
-        token.id   = user.id;
-        token.role = user.role || 'user';
+        token.id    = user.id;
+        token.role  = user.role  || 'user';
+        token.image = user.image || token.picture || null;
       }
 
-      // If Google login — save user to DB if not exists
+      // 2. Google login — upsert user in MongoDB
       if (account?.provider === 'google') {
-        const collection = dbConnect('users');
-        const existing = await collection.findOne({ email: token.email });
+        const collection = await dbConnect('users');
+        const existing   = await collection.findOne({ email: token.email });
 
         if (!existing) {
           await collection.insertOne({
@@ -74,29 +78,43 @@ export const authOptions = {
             role:      'user',
             createdAt: new Date(),
           });
+          token.role  = 'user';
+          token.image = token.picture;
+        } else {
+          token.id    = existing._id.toString();
+          token.role  = existing.role  || 'user';
+          token.image = existing.image || token.picture || null;
         }
+      }
 
-        token.role = existing?.role || 'user';
+      // 3. Session update (e.g. after editing profile)
+      if (trigger === 'update' && session) {
+        if (session.name)  token.name  = session.name;
+        if (session.image) token.image = session.image;
       }
 
       return token;
     },
 
-    // Expose id and role in the session
     async session({ session, token }) {
-      session.user.id   = token.id;
-      session.user.role = token.role;
+      // Expose all custom fields to the client session
+      session.user.id    = token.id;
+      session.user.role  = token.role;
+      session.user.name  = token.name;
+      session.user.image = token.image || null;
       return session;
     },
   },
 
   pages: {
-    signIn: '/login',   // redirect to your custom login page
-    error:  '/login',   // auth errors redirect back to login
+    signIn: '/login',
+    error:  '/login',
   },
 
   session: {
-    strategy: 'jwt',
+    strategy:  'jwt',
+    maxAge:    30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60,      // refresh session every 24h
   },
 
   secret: process.env.NEXTAUTH_SECRET,

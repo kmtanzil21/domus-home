@@ -1,18 +1,15 @@
 // src/lib/users.js
 import { dbConnect } from './dbConnect';
 import bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongodb';
 
 // Register a new user
 export async function createUser({ name, email, password }) {
   const collection = dbConnect('users');
 
-  // Check if email already exists
   const existing = await collection.findOne({ email });
-  if (existing) {
-    throw new Error('An account with this email already exists');
-  }
+  if (existing) throw new Error('An account with this email already exists');
 
-  // Hash the password
   const hashedPassword = await bcrypt.hash(password, 12);
 
   const result = await collection.insertOne({
@@ -21,6 +18,7 @@ export async function createUser({ name, email, password }) {
     password:  hashedPassword,
     provider:  'credentials',
     role:      'user',
+    image:     null,
     createdAt: new Date(),
   });
 
@@ -33,4 +31,20 @@ export async function getUserByEmail(email) {
   const user = await collection.findOne({ email });
   if (!user) return null;
   return { ...user, _id: user._id.toString() };
+}
+
+// Update user profile
+export async function updateUser(email, { name, image }) {
+  const collection = dbConnect('users');
+
+  const updateFields = {};
+  if (name)  updateFields.name  = name;
+  if (image) updateFields.image = image;
+
+  const result = await collection.updateOne(
+    { email },
+    { $set: updateFields }
+  );
+
+  return result;
 }
