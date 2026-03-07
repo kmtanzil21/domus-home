@@ -1,13 +1,21 @@
 // src/app/houses/[id]/page.jsx
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getWithOwner } from '@/lib/houses';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export default async function HouseDetailPage({ params }) {
   const { id } = await params;
-  const house = await getWithOwner(id);
 
+  // Not logged in → redirect to login, come back here after
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect(`/login?callbackUrl=/houses/${id}`);
+  }
+
+  const house = await getWithOwner(id);
   if (!house) notFound();
 
   return (
@@ -114,7 +122,7 @@ export default async function HouseDetailPage({ params }) {
                 <p className="text-white/60">{house.beds} Beds · {house.baths} Baths · {house.sqft} ft²</p>
               </div>
 
-              {/* Owner Info — fully visible */}
+              {/* Owner Info */}
               <div className="border-t border-white/10 pt-5">
                 <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Owner Details</p>
                 <div className="space-y-3">

@@ -3,13 +3,16 @@
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [form, setForm]     = useState({ email: '', password: '' });
-  const [error, setError]   = useState('');
+  const router               = useRouter();
+  const searchParams         = useSearchParams();
+  const callbackUrl          = searchParams.get('callbackUrl') || '/houses';
+
+  const [form, setForm]       = useState({ email: '', password: '' });
+  const [error, setError]     = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -33,13 +36,13 @@ export default function LoginPage() {
     if (res?.error) {
       setError(res.error);
     } else {
-      router.push('/houses');
+      router.push(callbackUrl);  // ← goes back to the page they came from
       router.refresh();
     }
   };
 
   const handleGoogle = () => {
-    signIn('google', { callbackUrl: '/houses' });
+    signIn('google', { callbackUrl });  // ← same for Google
   };
 
   return (
