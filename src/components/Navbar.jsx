@@ -24,7 +24,7 @@ const Navbar = () => {
   const isActive = (href) => pathname === href;
 
   return (
-    <nav className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+    <nav className={`sticky top-0 z-[100] w-full transition-all duration-300 ${
       scrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-white shadow-sm'
     } border-b border-primary/10`}>
 

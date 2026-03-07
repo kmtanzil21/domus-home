@@ -3,9 +3,14 @@ import React from 'react';
 
 const Logo = () => {
     return (
-        <div>
-            <Image src="/assets/domus.png" alt="Domus Logo" width={100} height={50} />
-        </div>
+        <Image 
+            src="/assets/domus.png" 
+            alt="Domus Logo" 
+            width={80} 
+            height={50}
+            className="object-contain"
+            style={{ maxHeight: '60px', width: 'auto' }}
+        />
     );
 };
 
