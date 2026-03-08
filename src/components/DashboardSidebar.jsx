@@ -11,13 +11,15 @@ import {
   RiUserLine,
   RiEditLine,
   RiLogoutBoxLine,
+  RiAddBoxLine,
 } from 'react-icons/ri';
 
 const navItems = [
-  { href: '/dashboard',              icon: RiHome5Line,     label: 'Overview'     },
-  { href: '/dashboard/edit-profile', icon: RiEditLine,      label: 'Edit Profile' },
-  { href: '/houses',                 icon: RiBuilding2Line, label: 'Browse Houses'},
-  { href: '/profile',                icon: RiUserLine,      label: 'My Profile'   },
+  { href: '/dashboard',              icon: RiHome5Line,     label: 'Overview'      },
+  { href: '/dashboard/add-house',    icon: RiAddBoxLine,    label: 'Add House'     },
+  { href: '/dashboard/edit-profile', icon: RiEditLine,      label: 'Edit Profile'  },
+  { href: '/houses',                 icon: RiBuilding2Line, label: 'Browse Houses' },
+  { href: '/profile',                icon: RiUserLine,      label: 'My Profile'    },
 ];
 
 export default function DashboardSidebar({ session }) {
@@ -31,18 +33,14 @@ export default function DashboardSidebar({ session }) {
   };
 
   const initials = session?.user?.name
-    ?.split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+    ?.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
 
   return (
     <div className="flex min-h-full flex-col bg-secondary
                     is-drawer-close:w-16 is-drawer-open:w-64
                     transition-all duration-300">
 
-      {/* Logo area */}
+      {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10
                       is-drawer-close:justify-center">
         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
@@ -50,8 +48,7 @@ export default function DashboardSidebar({ session }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" />
           </svg>
         </div>
-        <span className="text-white font-black text-sm uppercase tracking-widest
-                         is-drawer-close:hidden">
+        <span className="text-white font-black text-sm uppercase tracking-widest is-drawer-close:hidden">
           Domus
         </span>
       </div>
@@ -61,10 +58,8 @@ export default function DashboardSidebar({ session }) {
                       is-drawer-close:justify-center is-drawer-close:px-2">
         {session?.user?.image ? (
           <Image
-            src={session.user.image}
-            alt={session.user.name}
-            width={36}
-            height={36}
+            src={session.user.image} alt={session.user.name}
+            width={36} height={36}
             className="rounded-xl shrink-0 object-cover border-2 border-primary/40"
           />
         ) : (
@@ -79,7 +74,7 @@ export default function DashboardSidebar({ session }) {
         </div>
       </div>
 
-      {/* Nav links */}
+      {/* Nav */}
       <ul className="flex-1 px-2 py-4 space-y-1">
         {navItems.map(({ href, icon: Icon, label }) => {
           const active = pathname === href;
@@ -87,15 +82,15 @@ export default function DashboardSidebar({ session }) {
             <li key={href}>
               <Link
                 href={href}
+                data-tip={label}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold
-                            uppercase tracking-widest transition-all duration-200 group
+                            uppercase tracking-widest transition-all duration-200
                             is-drawer-close:justify-center is-drawer-close:tooltip
                             is-drawer-close:tooltip-right
                             ${active
                               ? 'bg-primary text-white'
                               : 'text-white/60 hover:bg-white/10 hover:text-white'
                             }`}
-                data-tip={label}
               >
                 <Icon className="text-base shrink-0" />
                 <span className="is-drawer-close:hidden">{label}</span>
@@ -109,12 +104,11 @@ export default function DashboardSidebar({ session }) {
       <div className="px-2 py-4 border-t border-white/10">
         <button
           onClick={handleSignOut}
+          data-tip="Sign Out"
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold
                      uppercase tracking-widest text-rose-400 hover:bg-rose-500/20
                      hover:text-rose-300 transition-all duration-200
-                     is-drawer-close:justify-center is-drawer-close:tooltip
-                     is-drawer-close:tooltip-right"
-          data-tip="Sign Out"
+                     is-drawer-close:justify-center is-drawer-close:tooltip is-drawer-close:tooltip-right"
         >
           <RiLogoutBoxLine className="text-base shrink-0" />
           <span className="is-drawer-close:hidden">Sign Out</span>
