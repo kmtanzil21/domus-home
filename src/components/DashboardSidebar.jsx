@@ -12,11 +12,13 @@ import {
   RiEditLine,
   RiLogoutBoxLine,
   RiAddBoxLine,
+  RiListCheck,
 } from 'react-icons/ri';
 
 const navItems = [
   { href: '/dashboard',              icon: RiHome5Line,     label: 'Overview'      },
   { href: '/dashboard/add-house',    icon: RiAddBoxLine,    label: 'Add House'     },
+  { href: '/dashboard/my-listings',  icon: RiListCheck,     label: 'My Listings'   },
   { href: '/dashboard/edit-profile', icon: RiEditLine,      label: 'Edit Profile'  },
   { href: '/houses',                 icon: RiBuilding2Line, label: 'Browse Houses' },
   { href: '/profile',                icon: RiUserLine,      label: 'My Profile'    },

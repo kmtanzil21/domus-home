@@ -60,3 +60,18 @@ export async function getWithOwner(id) {
     return null;
   }
 }
+
+// Get all houses by the logged-in user
+export async function getMyHouses(email) {
+  try {
+    const collection = await dbConnect('houses');
+    const houses = await collection
+      .find({ 'owner.email': email })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    return houses.map((h) => ({ ...h, _id: h._id.toString() }));
+  } catch {
+    return [];
+  }
+}
