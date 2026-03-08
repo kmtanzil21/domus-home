@@ -15,19 +15,19 @@ const luxuryHomes = [
     id: 1,
     url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2000&auto=format&fit=crop',
     title: 'Modern Mansion',
-    location: 'Los Angeles, CA',
+    location: 'Dhaka',
   },
   {
     id: 2,
     url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2000&auto=format&fit=crop',
     title: 'Contemporary Villa',
-    location: 'Miami, FL',
+    location: 'Rajshahi',
   },
   {
     id: 3,
     url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2000&auto=format&fit=crop',
     title: 'Minimalist Retreat',
-    location: 'Austin, TX',
+    location: 'Chattogram',
   },
 ];
 
